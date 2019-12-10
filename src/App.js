@@ -1,63 +1,67 @@
 //TODO: STEP 1 - Import the useState hook.
 import React, {useState} from "react";
 import "./App.css";
-import BottomRow from "./BottomRow";
+import {TopRow} from "./TopRow";       // inline export
+import BottomRow from "./BottomRow";   // default export
+import Buttons from "./Buttons";       // default export
+
 
 function App() {
-  //TODO: STEP 2 - Establish your applictaion's state with some useState hooks.  You'll need one for the home score and another for the away score.
   const [homeScore, setHomeScore] = useState(0);
   const [awayScore, setAwayScore] = useState(0);
+  const [quarter, setQuarter] = useState(1);
 
-  const home_touchdown_cb = () => {
-    setHomeScore(homeScore + 7);
-  }
+  const handler = (teamName, amount) => {
+    if (teamName.toLowerCase() === 'lions') {
+      if (amount === 7) {
+        setHomeScore(homeScore + 7);
+      } else if (amount === 3) {
+        setHomeScore(homeScore + 3);
+      }
+    } else if (teamName.toLowerCase() === 'tigers') {
+      if (amount === 7) {
+        setAwayScore(awayScore + 7);
+      } else if (amount === 3) {
+        setAwayScore(awayScore + 3);
+      }
+    }
+  };
 
-  const home_fieldgoal_cb = () => {
-    setHomeScore(homeScore + 3);
-  }
+  const quarterHandler = (updown) => {
+    if (updown === 'up') {
+      setQuarter(quarter + 1);
+    } else if (updown === 'down') {
+      setQuarter(quarter - 1);
+    }
+  } 
 
-  const away_touchdown_cb = () => {
-    setAwayScore(awayScore + 7);
-  }
 
-  const away_fieldgoal_cb = () => {
-    setAwayScore(awayScore + 3);
-  }
+  // const home_touchdown_cb = () => {
+  //   setHomeScore(homeScore + 7);
+  // }
 
+  // const home_fieldgoal_cb = () => {
+  //   setHomeScore(homeScore + 3);
+  // }
+
+  // const away_touchdown_cb = () => {
+  //   setAwayScore(awayScore + 7);
+  // }
+
+  // const away_fieldgoal_cb = () => {
+  //   setAwayScore(awayScore + 3);
+  // }
 
 
   return (
     <div className="container">
       <section className="scoreboard">
-        <div className="topRow">
-          <div className="home">
-            <h2 className="home__name">Lions</h2>
-
-            {/* TODO STEP 3 - We need to change the hardcoded values in these divs to accept dynamic values from our state. */}
-
-            <div className="home__score">{homeScore}</div>
-          </div>
-          <div className="timer">00:03</div>
-          <div className="away">
-            <h2 className="away__name">Tigers</h2>
-            <div className="away__score">{awayScore}</div>
-          </div>
-        </div>
-        <BottomRow />
+        <TopRow homeScore={homeScore} awayScore={awayScore}/>
+        <BottomRow quarter={quarter}/>
       </section>
-      <section className="buttons">
-        <div className="homeButtons">
-          {/* TODO STEP 4 - Now we need to attach our state setter functions to click listeners. */}
-          <button className="homeButtons__touchdown" onClick={home_touchdown_cb}>Home Touchdown</button>
-          <button className="homeButtons__fieldGoal" onClick={home_fieldgoal_cb}>Home Field Goal</button>
-        </div>
-        <div className="awayButtons">
-          <button className="awayButtons__touchdown" onClick={away_touchdown_cb}>Away Touchdown</button>
-          <button className="awayButtons__fieldGoal" onClick={away_fieldgoal_cb}>Away Field Goal</button>
-        </div>
-      </section>
+      <Buttons handler={handler} quarterHandler={quarterHandler}/>
     </div>
   );
-}
+};
 
 export default App;
